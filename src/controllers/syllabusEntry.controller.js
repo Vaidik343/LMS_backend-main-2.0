@@ -12,8 +12,15 @@ const ALLOWED_CONTENT_TYPES = [
 // CREATE
 const createSyllabusEntry = async (req, res) => {
     try {
+
+        
+        if (!["admin", "teacher"].includes(req.user.role)) {
+  return res.status(403).json({ message: "Forbidden" });
+}
+
         const { chapter_id, content_type, description } = req.body;
 
+        
         // validation
         if (!chapter_id || !content_type) {
             return res.status(400).json({
@@ -40,7 +47,8 @@ const createSyllabusEntry = async (req, res) => {
         const existing = await SyllabusEntry.findOne({
             where: {
                 chapter_id,
-                content_type
+                content_type,
+                is_active: true
             }
         });
 
@@ -73,10 +81,24 @@ const getAllSyllabusEntries = async (req, res) => {
         const limit = Math.min(parseInt(req.query.limit) || 20, 50);
         const offset = (page - 1) * limit;
 
+            // 🔥 Student sees only their syllabus
+    const where = { is_active: true };
+
+if (req.query.chapter_id) {
+  where.chapter_id = req.query.chapter_id;
+}
+
         const { count, rows } = await SyllabusEntry.findAndCountAll({
             order: [["id", "ASC"]],
             limit,
-            offset
+            offset,
+            where,
+              include: [
+    {
+      model: Chapter,
+      attributes: ["id", "title"]
+    }
+  ]
         });
 
         return res.status(200).json({
@@ -101,12 +123,11 @@ const getSyllabusEntryById = async (req, res) => {
 
         const syllabusEntry = await SyllabusEntry.findByPk(syllabusEntryId);
 
-        if (!syllabusEntry) {
-            return res.status(404).json({
-                message: "Syllabus Entry not found"
-            });
-        }
-
+if (!syllabusEntry || !syllabusEntry.is_active) {
+  return res.status(404).json({
+    message: "Syllabus Entry not found"
+  });
+}
         return res.status(200).json({
             message: "Syllabus Entry found",
             data: syllabusEntry
@@ -125,6 +146,9 @@ const updateSyllabusEntry = async (req, res) => {
         const syllabusEntryId = req.params.id;
         const { content_type, description } = req.body;
 
+        if (!["admin", "teacher"].includes(req.user.role)) {
+  return res.status(403).json({ message: "Forbidden" });
+}
         const syllabusEntry = await SyllabusEntry.findByPk(syllabusEntryId);
 
         if (!syllabusEntry) {
@@ -160,6 +184,10 @@ const updateSyllabusEntry = async (req, res) => {
 // DELETE (soft delete)
 const deleteSyllabusEntry = async (req, res) => {
     try {
+
+        if (req.user.role !== "admin") {
+  return res.status(403).json({ message: "Forbidden" });
+}
         const syllabusEntryId = req.params.id;
 
         const syllabusEntry = await SyllabusEntry.findByPk(syllabusEntryId);
@@ -192,6 +220,10 @@ const deleteSyllabusEntry = async (req, res) => {
 // SET ACTIVE
 const setActiveSyllabusEntry = async (req, res) => {
     try {
+
+        if (req.user.role !== "admin") {
+  return res.status(403).json({ message: "Forbidden" });
+}
         const syllabusEntryId = req.params.id;
 
         const syllabusEntry = await SyllabusEntry.findByPk(syllabusEntryId);

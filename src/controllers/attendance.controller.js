@@ -9,15 +9,17 @@ const createBulkAttendance = async (req, res) => {
 
     // 1. Validate input
     if (!session_id || !Array.isArray(students) || students.length === 0) {
-      throw new Error("session_id and students array required");
+      return res.status(400).json({message:"field required!"});
     }
 
     // 2. Validate session
     const session = await Session.findByPk(session_id, { transaction: t });
-    if (!session) throw new Error("Invalid Session");
-
+    if (!session) {
+      await t.rollback();
+      return res.status(404).json({ message: "Invalid Session" });
+    }
     // 3. Validate students
-    const studentIds = students.map(s => s.student_id);
+    const studentIds = students.map((s) => s.student_id);
 
     const validStudents = await Student.findAll({
       where: { id: studentIds },
@@ -25,17 +27,22 @@ const createBulkAttendance = async (req, res) => {
     });
 
     if (validStudents.length !== studentIds.length) {
-      throw new Error("Some student IDs are invalid");
+      await t.rollback();
+      return res.status(400).json({
+        message: "Some student IDs are invalid",
+      });
     }
 
-    // 4. Validate attendance data
-    const invalid = students.find(s => s.is_present === undefined);
+    const invalid = students.find((s) => s.is_present === undefined);
     if (invalid) {
-      throw new Error(`is_present required for student ${invalid.student_id}`);
+      await t.rollback();
+      return res.status(400).json({
+        message: `is_present required for student ${invalid.student_id}`,
+      });
     }
 
     // 5. Prepare data
-    const data = students.map(s => ({
+    const data = students.map((s) => ({
       session_id,
       student_id: s.student_id,
       is_present: s.is_present,
@@ -56,17 +63,16 @@ const createBulkAttendance = async (req, res) => {
       message: "Attendance processed successfully",
       count: data.length,
     });
-
   } catch (error) {
     await t.rollback();
     console.log("🚀 bulk attendance error:", error);
     res.status(500).json({
-      message: error.message || "Server Error",
+      message: "Server Error",
     });
   }
 };
 
-// GET ALL (WITH FILTERS) 
+// GET ALL (WITH FILTERS)
 const getAllAttendance = async (req, res) => {
   try {
     const { student_id, session_id } = req.query;
@@ -76,7 +82,13 @@ const getAllAttendance = async (req, res) => {
 
     // filters
     const where = {};
-    if (student_id) where.student_id = student_id;
+    // 🔥 student sees only their data
+    if (req.user.role === "student") {
+      where.student_id = req.user.id;
+    } else {
+      if (student_id) where.student_id = student_id;
+    }
+
     if (session_id) where.session_id = session_id;
 
     const { count, rows } = await Attendance.findAndCountAll({
@@ -102,7 +114,6 @@ const getAllAttendance = async (req, res) => {
       page,
       limit,
     });
-
   } catch (error) {
     res.status(500).json({ message: "Server Error" });
   }
@@ -131,7 +142,6 @@ const getAttendanceById = async (req, res) => {
     }
 
     res.status(200).json(attendance);
-
   } catch (error) {
     res.status(500).json({ message: "Server Error" });
   }
@@ -155,7 +165,6 @@ const updateAttendance = async (req, res) => {
     });
 
     res.status(200).json(updated);
-
   } catch (error) {
     res.status(500).json({ message: "Server Error" });
   }
@@ -175,13 +184,12 @@ const deleteAttendance = async (req, res) => {
     await attendance.update({ is_active: false });
 
     res.status(200).json({ message: "Attendance deleted" });
-
   } catch (error) {
     res.status(500).json({ message: "Server Error" });
   }
 };
 
-// STUDENT SELF 
+// STUDENT SELF
 const getMyAttendance = async (req, res) => {
   try {
     if (!req.user) {
@@ -202,7 +210,6 @@ const getMyAttendance = async (req, res) => {
     });
 
     res.status(200).json(attendance);
-
   } catch (error) {
     res.status(500).json({ message: "Server Error" });
   }

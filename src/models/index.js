@@ -35,11 +35,11 @@ const Subject       = require("./subject.model")(sequelize, DataTypes);
 const Chapter       = require("./chapter.model")(sequelize, DataTypes);
 const SyllabusEntry = require("./syllabusEntry.model")(sequelize, DataTypes);
 
-const Assessment       = require("./assessment.model")(sequelize, DataTypes);
-const AssessmentResult = require("./assessmentResult.model")(sequelize, DataTypes);
+const Assessment       = require("./assessments.model")(sequelize, DataTypes);
+const AssessmentResult = require("./assessmentResults.model")(sequelize, DataTypes);
 const StudentTransfer  = require("./studentTransfer.model")(sequelize, DataTypes);
 
-// ── Layer 1 Associations ─────────────────────────────────────
+// ── Layer 1 Associations ───────────────────────────────────── 
 
 // Department → Course
 Department.hasMany(Course, { foreignKey: "department_id", onDelete: "RESTRICT" });
