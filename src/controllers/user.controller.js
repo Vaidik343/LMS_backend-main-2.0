@@ -124,7 +124,7 @@ const getMyProfile = async (req, res) => {
   }
 };
 
-module.exports = {
+module.exports.userController = {
   getAllUsers,
   getUserById,
   updateUser,

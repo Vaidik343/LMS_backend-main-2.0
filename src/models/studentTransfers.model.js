@@ -23,11 +23,11 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.UUID,
                 allowNull: false
             },
-            from_semester_id: {
+            from_division_id: {
                 type: DataTypes.UUID,
                 allowNull: false
             },
-            to_semester_id: {
+            from_division_id: {
                 type: DataTypes.UUID,
                 allowNull: false
             },
@@ -46,6 +46,10 @@ module.exports = (sequelize, DataTypes) => {
                      remark: {
                 type: DataTypes.TEXT,
                 allowNull: true
+            },
+            transferred_by : {
+                type: DataTypes.STRING,
+                allowNull: false
             },
              is_active: {
         type: DataTypes.BOOLEAN,
