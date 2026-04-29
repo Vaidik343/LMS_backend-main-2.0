@@ -232,3 +232,4 @@ const deleteResult = async (req, res) => {
 module.exports.AssessmentResultController = {
     createBulkResults, getAllResults, getResultById, updateResult, deleteResult
 }
+

@@ -108,21 +108,21 @@ const deleteUser = async (req, res) => {
 };
 
 // ================= GET MY PROFILE =================
-const getMyProfile = async (req, res) => {
-  try {
-    const userId = req.user.id; // from auth middleware
+// const getMyProfile = async (req, res) => {
+//   try {
+//     const userId = req.user.id; // from auth middleware
 
-    const user = await User.findByPk(userId, {
-      attributes: { exclude: ["google_id"] }
-    });
+//     const user = await User.findByPk(userId, {
+//       attributes: { exclude: ["google_id"] }
+//     });
 
-    res.status(200).json(user);
+//     res.status(200).json(user);
 
-  } catch (error) {
-    console.log("🚀 getMyProfile error:", error);
-    res.status(500).json({ message: "Server Error" });
-  }
-};
+//   } catch (error) {
+//     console.log("🚀 getMyProfile error:", error);
+//     res.status(500).json({ message: "Server Error" });
+//   }
+// };
 
 module.exports.userController = {
   getAllUsers,

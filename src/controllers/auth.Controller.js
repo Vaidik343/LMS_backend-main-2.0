@@ -6,6 +6,22 @@ const { User } = require("../models");
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
+// ================= TOKEN HELPERS =================
+
+const generateAccessToken = (user) => {
+  return jwt.sign(
+    { id: user.id, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: "15m" } // short-lived
+  );
+};
+
+const generateRefreshToken = () => {
+  return crypto.randomBytes(40).toString("hex");
+};
+
+// ================= LOGIN =================
+
 const loginWithGoogle = async (req, res) => {
   try {
     const { token } = req.body;
@@ -41,24 +57,124 @@ const loginWithGoogle = async (req, res) => {
       });
     }
 
-    const jwtToken = jwt.sign(
-      {
-        id: user.id,
-        role: user.role,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
+    // 🔥 NEW: generate tokens
+    const accessToken = generateAccessToken(user);
+    const refreshTokenValue = generateRefreshToken();
+
+    // 🔥 store refresh token
+    await RefreshToken.create({
+      user_id: user.id,
+      token: refreshTokenValue,
+      is_active: true,
+    });
 
     res.status(200).json({
       message: "Login successful",
-      token: jwtToken,
+      accessToken,
+      refreshToken: refreshTokenValue,
       user,
     });
 
   } catch (error) {
+    console.log("🚀 login error:", error);
     res.status(500).json({ message: "Invalid Google token" });
   }
 };
 
-module.exports = { loginWithGoogle };
+// ================= REFRESH TOKEN =================
+
+const refreshToken = async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+      return res.status(400).json({
+        message: "Refresh token required",
+      });
+    }
+
+    const stored = await RefreshToken.findOne({
+      where: {
+        token: refreshToken,
+        is_active: true,
+      },
+    });
+
+    if (!stored) {
+      return res.status(403).json({
+        message: "Invalid refresh token",
+      });
+    }
+
+    const user = await User.findByPk(stored.user_id);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    const newAccessToken = generateAccessToken(user);
+
+    res.status(200).json({
+      accessToken: newAccessToken,
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+
+
+// ================= LOGOUT =================
+
+const logout = async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+      return res.status(400).json({
+        message: "Refresh token required",
+      });
+    }
+
+    await RefreshToken.update(
+      { is_active: false },
+      {
+        where: {
+          token: refreshToken,
+          user_id: req.user.id,
+        },
+      }
+    );
+
+    res.status(200).json({
+      message: "Logged out successfully",
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+
+
+const getMe = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.user.id, {
+      attributes: ["id", "name", "email", "role"],
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(user);
+
+  } catch (error) {
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+module.exports.authController = { loginWithGoogle, refreshToken, logout, getMe };

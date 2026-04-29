@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.UUID,
                 allowNull: false
             },
-            from_division_id: {
+            to_division_id: {
                 type: DataTypes.UUID,
                 allowNull: false
             },
