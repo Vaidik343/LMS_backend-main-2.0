@@ -25,6 +25,13 @@ const createClass = async (req,res) => {
     {
         return res.status(409).json({message:"Already Exist!"})
     }
+
+    const existingCode = await Class.findOne({ where: { code } })
+if (existingCode) {
+  return res.status(409).json({ message: "Class with this code already exists" })
+}
+
+
     const classCreate = await Class.create({
         name, code, duration_years, description, is_active:true
     })
@@ -125,27 +132,8 @@ const deleteClass = async (req,res) => {
 }
 
 
-const setActiveClass = async (req, res) => {
-    try {
-        const classId = req.params.id 
 
-               const classActive = await Class.findByPk(classId);
-
-        if(!classActive)
-        {
-            return res.status(404).json({message: "Not Found!"});
-        }
-
-        
-        await classActive.update({is_active:true});
-                      res.status(200).json(classActive)
-    } catch (error) {
-        res.status(500).json({message:'Server Error'})
-        
-    console.log("🚀 ~ setActivClass ~ error:", error)
-    }
-}
 
 module.exports = {
-    createClass, getAllClass, getClassById, updateClass,deleteClass, setActiveClass
+    createClass, getAllClass, getClassById, updateClass,deleteClass, 
 }

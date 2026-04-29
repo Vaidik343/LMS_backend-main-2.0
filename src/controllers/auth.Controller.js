@@ -2,8 +2,8 @@
 
 const { OAuth2Client } = require("google-auth-library");
 const jwt = require("jsonwebtoken");
-const { User } = require("../models");
-
+const { User ,RefreshToken } = require("../models");
+const crypto = require("crypto")
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // ================= TOKEN HELPERS =================
@@ -12,7 +12,7 @@ const generateAccessToken = (user) => {
   return jwt.sign(
     { id: user.id, role: user.role },
     process.env.JWT_SECRET,
-    { expiresIn: "15m" } // short-lived
+    { expiresIn: "30m" } // short-lived
   );
 };
 
@@ -46,17 +46,13 @@ const loginWithGoogle = async (req, res) => {
 
     let user = await User.findOne({ where: { google_id } });
 
-    if (!user) {
-      user = await User.create({
-        name,
-        email,
-        google_id,
-        avatar_url,
-        role: "student",
-        is_active: true,
-      });
-    }
+if (!user) {
+  return res.status(401).json({ message: "You are not registered in the system" })
+} 
 
+if (!user.is_active) {
+  return res.status(403).json({ message: "Your account is disabled" })
+}
     // 🔥 NEW: generate tokens
     const accessToken = generateAccessToken(user);
     const refreshTokenValue = generateRefreshToken();
@@ -66,6 +62,7 @@ const loginWithGoogle = async (req, res) => {
       user_id: user.id,
       token: refreshTokenValue,
       is_active: true,
+        expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
     });
 
     res.status(200).json({

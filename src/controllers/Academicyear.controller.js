@@ -156,7 +156,7 @@ const setActiveAcademicYear = async (req, res) => {
             return res.status(404).json({message:"Not Found!"});
         }
         // deactivate all others first
-        await academicYear.update({ is_active: false }, { where: {} });
+        await AcademicYear.update({ is_active: false }, { where: {} });
 await academicYear.update({ is_active: true });
               res.status(200).json({message:"Academic Year set as active successfully"})
     } catch (error) {
@@ -165,6 +165,6 @@ await academicYear.update({ is_active: true });
 
 }
 
-module.exports = {
+module.exports.academicYearController = {
     createAcademicYear, getAllAcademicYear, getAcademicYearById, updateAcademicYear, setActiveAcademicYear, deleteAcademicYear
 }

@@ -8,6 +8,11 @@ const createDepartment = async (req, res) => {
       return res.status(400).json({ message: "All field required!" });
     }
 
+    //duplicate check
+const existing = await Department.findOne({ where: { code } })
+if (existing) {
+  return res.status(409).json({ message: "Department with this code already exists" })
+}
     const department = await Department.create({
       name,
       code,
@@ -113,33 +118,33 @@ const deleteDepartment = async (req, res) => {
   }
 };
 
-const setActiveDepartment = async (req, res) => {
-  try {
-    const departmentId = req.params.id;
+// const setActiveDepartment = async (req, res) => {
+//   try {
+//     const departmentId = req.params.id;
 
-    const department = await Department.findByPk(departmentId);
+//     const department = await Department.findByPk(departmentId);
 
-    if (!department) {
-      return res.status(404).json({ message: "Not Found!" });
-    }
+//     if (!department) {
+//       return res.status(404).json({ message: "Not Found!" });
+//     }
 
-    // deactivate all others first
-    await department.update({ is_active: false }, { where: {} });
-    await department.update({ is_active: true });
+//     // deactivate all others first
+//     await Department.update({ is_active: false }, { where: {} });
+//     await department.update({ is_active: true });
 
-    // await Department.update({ is_active: false }, { where: {} });
+//     // await Department.update({ is_active: false }, { where: {} });
 
-    // await department.update({ is_active: true });
-    res.status(200).json({ message: "Department set as active successfully" });
-  } catch (error) {
-    res.status(500).json({ message: "Server Error" });
-  }
-};
-module.exports = {
+//     // await department.update({ is_active: true });
+//     res.status(200).json({ message: "Department set as active successfully" });
+//   } catch (error) {
+//     res.status(500).json({ message: "Server Error" });
+//   }
+// };
+module.exports.departmentController = {
   createDepartment,
   getAllDepartment,
   getByDepartmentId,
   updateDepartment,
   deleteDepartment,
-  setActiveDepartment,
+  // setActiveDepartment,
 };

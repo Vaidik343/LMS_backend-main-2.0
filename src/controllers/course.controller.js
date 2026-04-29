@@ -22,6 +22,11 @@ const classData = await Class.findByPk(class_id);
 if (!classData) {
     return res.status(404).json({ message: "Invalid Class" });
 }
+
+const existing = await Course.findOne({ where: { code } })
+if (existing) {
+  return res.status(409).json({ message: "Course with this code already exists" })
+}
        const courses = await Course.create({
         name,code ,description, department_id, class_id, is_active:true
        })
@@ -42,6 +47,10 @@ const getAllCourse = async (req, res) => {
         const  offset = (page - 1) * limit
 
         const {count, rows} = await Course.findAndCountAll({
+             include: [
+        { model: Department, as: 'department' },
+        { model: Class, as: 'class' }
+    ],
             order:[["name", "ASC"]],
             limit,
             offset
@@ -58,7 +67,12 @@ const getAllCourse = async (req, res) => {
 const getCourseById = async (req, res) => {
     try {
         const courseId = req.params.id;
-        const course = await Course.findByPk(courseId);
+        const course = await Course.findByPk(courseId,{
+             include: [
+        { model: Department, as: 'department' },
+        { model: Class, as: 'class' }
+    ]
+        });
 
         // const course = await Course.findOne({
         //     where: {
@@ -130,25 +144,25 @@ const deleteCourse = async (req, res) => {
 }
 
     
-const setActiveCourse = async (req, res) => {
+// const setActiveCourse = async (req, res) => {
 
-    try {
-         const courseId = req.params.id;
-        const course = await Course.findByPk(courseId);
+//     try {
+//          const courseId = req.params.id;
+//         const course = await Course.findByPk(courseId);
 
-        if(!course)
-        {
-            return res.status(404).json({message:"Not Found!"})
-        }
-        await course.update({is_active:true});
-        res.status(200).json({ message: "Course set as active successfully" })
-    } catch (error) {
-        console.log("🚀 ~ setActiveCourse ~ error:", error)
-        res.status(500).json({message:'Server Error'})
-    }
+//         if(!course)
+//         {
+//             return res.status(404).json({message:"Not Found!"})
+//         }
+//         await course.update({is_active:true});
+//         res.status(200).json({ message: "Course set as active successfully" })
+//     } catch (error) {
+//         console.log("🚀 ~ setActiveCourse ~ error:", error)
+//         res.status(500).json({message:'Server Error'})
+//     }
 
-}
+// }
 
-module.exports = {
-    createCourse, getAllCourse, getCourseById, updateCourse, deleteCourse, setActiveCourse
+module.exports.courseController = {
+    createCourse, getAllCourse, getCourseById, updateCourse, deleteCourse,
 }
