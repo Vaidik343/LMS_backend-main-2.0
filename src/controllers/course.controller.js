@@ -118,7 +118,7 @@ const updateCourse = async (req, res) => {
 }
 
 
-    
+
 const deleteCourse = async (req, res) => {
     try {
         const courseId = req.params.id;

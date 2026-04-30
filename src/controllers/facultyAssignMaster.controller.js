@@ -6,9 +6,9 @@ const createFacultyAssign = async (req, res) => {
 
 
          // role check
-    if (!["admin", "hod"].includes(req.user.role)) {
-      return res.status(403).json({ message: "Forbidden" });
-    }
+    // if (!["admin", "hod"].includes(req.user.role)) {
+    //   return res.status(403).json({ message: "Forbidden" });
+    // }
 
 
         if (!faculty_id || !department_id || !course_id || !batch_id || !division_id || !semester_id || !subject_id) {
@@ -108,9 +108,9 @@ const where = { is_active: true };
 
 
 // ROLE FILTER
-    if (req.user.role === "teacher") {
-      where.faculty_id = req.user.id;
-    }
+    // if (req.user.role === "teacher") {
+    //   where.faculty_id = req.user.id;
+    // }
 
 
 
@@ -149,7 +149,7 @@ const getFacultyAssignById = async (req, res) => {
   try {
     const id = req.params.id;
 
-    const assign = await FacultyAssign.findByPk(id, {
+    const assign = await FacultyAssignMaster.findByPk(id, {
       include: [
         { model: Faculty },
         { model: Subject },
@@ -165,12 +165,12 @@ const getFacultyAssignById = async (req, res) => {
     }
 
     // 🔥 Teacher can only see their own
-    if (
-      req.user.role === "teacher" &&
-      assign.faculty_id !== req.user.id
-    ) {
-      return res.status(403).json({ message: "Forbidden" });
-    }
+    // if (
+    //   req.user.role === "teacher" &&
+    //   assign.faculty_id !== req.user.id
+    // ) {
+    //   return res.status(403).json({ message: "Forbidden" });
+    // }
 
     res.status(200).json(assign);
 
@@ -183,11 +183,11 @@ const updateFacultyAssign = async (req, res) => {
   try {
     const id = req.params.id;
 
-    if (!["admin", "hod"].includes(req.user.role)) {
-      return res.status(403).json({ message: "Forbidden" });
-    }
+    // if (!["admin", "hod"].includes(req.user.role)) {
+    //   return res.status(403).json({ message: "Forbidden" });
+    // }
 
-    const assign = await FacultyAssign.findByPk(id);
+    const assign = await FacultyAssignMaster.findByPk(id);
 
     if (!assign) {
       return res.status(404).json({ message: "Not Found!" });
@@ -234,9 +234,9 @@ const deleteFacultyAssignMaster = async (req,res) => {
         }
 
 
-    if (!["admin", "hod"].includes(req.user.role)) {
-      return res.status(403).json({ message: "Forbidden" });
-    }
+    // if (!["admin", "hod"].includes(req.user.role)) {
+    //   return res.status(403).json({ message: "Forbidden" });
+    // }
 
                 await facultyAssign.update({is_active: false});
         res.status(200).json({message:"faculty master Deactivated!"})
@@ -247,6 +247,6 @@ const deleteFacultyAssignMaster = async (req,res) => {
 
 }
 
-module.exports = {
-    createFacultyAssign, getAllFacultyAssignMaster, getFacultyAssignById ,deleteFacultyAssignMaster
+module.exports.facultyAssignMasterController = {
+    createFacultyAssign, getAllFacultyAssignMaster, getFacultyAssignById , updateFacultyAssign, deleteFacultyAssignMaster
 }

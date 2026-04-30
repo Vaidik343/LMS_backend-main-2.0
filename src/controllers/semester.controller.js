@@ -155,7 +155,7 @@ const setActiveSemester = async (req, res) => {
   }
 };
 
-module.exports = {
+module.exports.semesterController = {
   createSemester,
   getAllSemester,
   getSemesterById,

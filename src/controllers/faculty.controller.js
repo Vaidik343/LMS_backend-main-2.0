@@ -170,6 +170,11 @@ const deleteFaculty = async (req, res) => {
         {
             return res.status(404).json({message:"Not Found!"});
         }
+
+        // deleteFaculty — missing is_active check before deleting
+if (faculty.is_active) {
+  return res.status(400).json({ message: "Cannot delete an active faculty" })
+} 
     
 await faculty.update({ is_active: false });
 
@@ -179,6 +184,6 @@ res.status(200).json({ message: "faculty deleted successfully" });
     }
 }
 
-module.exports = {
+module.exports.facultyController = {
   createFaculty, getAllFaculty, getFacultyById, updateFaculty, deleteFaculty
 }

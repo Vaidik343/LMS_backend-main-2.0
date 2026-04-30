@@ -117,7 +117,7 @@ const updateSubject = async (req,res) => {
             return res.status(404).json({message:"Not Found!"});
         }
 
-        const updateSubject = await Subject.update({name , code , description})
+        const updateSubject = await subject.update({name , code , description})
         res.status(200).json(updateSubject)
     } catch (error) {
         res.status(500).json({message:'Server Error'})
@@ -172,6 +172,6 @@ const setActiveSubject = async (req, res) => {
 };
 
 
-module.exports = {
+module.exports.subjectController = {
     createSubject, getAllSubject, updateSubject, deleteSubject, getSubjectById, setActiveSubject
 }

@@ -57,14 +57,15 @@ const getAllStudent = async (req, res) => {
     const where = { is_active: true };
 
 // 🔥 student sees only themselves
-if (req.user.role === "student") {
-  where.user_id = req.user.id;
-}
-
+// if (req.user.role === "student") {
+//   where.user_id = req.user.id;
+// }
+ // pate this controller again in cloude
      const {count, rows} = await Student.findAndCountAll({
             order:[["id", "ASC"]],
             limit,
             offset,
+            where,
                 include: [
         {
             model: User,
@@ -156,7 +157,7 @@ res.status(200).json({ message: "Student deleted successfully" });
     }
 }
 
-module.exports = {
+module.exports.studentController = {
     createStudent , getAllStudent , getStudentById, updateStudent, deleteStudent
 }
 

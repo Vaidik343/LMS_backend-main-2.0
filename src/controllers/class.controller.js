@@ -134,6 +134,6 @@ const deleteClass = async (req,res) => {
 
 
 
-module.exports = {
+module.exports.classController = {
     createClass, getAllClass, getClassById, updateClass,deleteClass, 
 }

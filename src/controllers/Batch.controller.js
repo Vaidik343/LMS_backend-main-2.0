@@ -129,7 +129,7 @@ console.log("🚀 ~ deleteBatch ~ error:", error)
 // }
 
 
-module.exports = {
+module.exports.batchController = {
     createBatchYear, getAllBatches, getBatchById, updateBatch, deleteBatch ,
 }                        
 

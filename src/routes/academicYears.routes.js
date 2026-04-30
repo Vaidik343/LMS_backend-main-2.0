@@ -23,3 +23,4 @@ router.patch("/academic_years/:id/set-active",  roleAuth('AcademicYear', 'setAct
 
 module.exports = router;
 
+  

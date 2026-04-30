@@ -132,6 +132,6 @@ const deleteDivision = async (req,res) => {
 
 }
 
-module.exports = {
+module.exports.divisionController = {
     createDivision, getAllDivision, getDivisionById, updateDivision, deleteDivision 
 }

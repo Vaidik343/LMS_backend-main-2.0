@@ -4,11 +4,11 @@ const createStudentProgress = async (req, res) => {
   try {
     // only admin
 
-    if (!["admin"].includes(req.user.role)) {
-      return res.status(403).json({
-        message: "Forbidden",
-      });
-    }
+    // if (!["admin"].includes(req.user.role)) {
+    //   return res.status(403).json({
+    //     message: "Forbidden",
+    //   });
+    // }
 
     const {
       student_id,
@@ -169,9 +169,9 @@ return res.status(400).json({ message: "Invalid Id" });
 
 const promoteStudent = async (req, res) => {
   try {
-    if (req.user.role !== "admin") {
-      return res.status(403).json({ message: "Forbidden" });
-    }
+    // if (req.user.role !== "admin") {
+    //   return res.status(403).json({ message: "Forbidden" });
+    // }
 
     const { student_id, semester_id, academic_year_id } = req.body;
 
@@ -215,6 +215,6 @@ const promoteStudent = async (req, res) => {
   }
 };
 
-module.exports = {
+module.exports.studentProgressController = {
   createStudentProgress, getAllStudentProgress, getStudentProgressById, promoteStudent
 }

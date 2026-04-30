@@ -72,6 +72,7 @@ const createBulkAttendance = async (req, res) => {
   }
 };
 
+
 // GET ALL (WITH FILTERS)
 const getAllAttendance = async (req, res) => {
   try {
@@ -215,7 +216,7 @@ const getMyAttendance = async (req, res) => {
   }
 };
 
-module.exports = {
+module.exports.attendanceController = {
   createBulkAttendance,
   getAllAttendance,
   getAttendanceById,

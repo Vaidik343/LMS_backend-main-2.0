@@ -7,15 +7,15 @@ const {roleAuth} = require("../middleware/roleMiddleware");
 router.use(authenticate);
 
 
-router.post("/courses", courseController.createCourse);
+router.post("/courses", roleAuth('Course', 'create'), courseController.createCourse);
 
-router.get("/courses", courseController.getAllCourse)
+router.get("/courses", roleAuth('Course', 'read'), courseController.getAllCourse)
 
-router.get("/courses/:id", courseController.getCourseById);
+router.get("/courses/:id", roleAuth('Course', 'read'), courseController.getCourseById);
 
-router.put("/courses/:id", courseController.updateCourse);
+router.put("/courses/:id", roleAuth('Course', 'update'), courseController.updateCourse);
 
-router.delete("/courses/:id", courseController.deleteCourse);
+router.delete("/courses/:id", roleAuth('Course', 'delete'), courseController.deleteCourse);
 
 
 module.exports = router

@@ -12,6 +12,13 @@ const createChapter = async (req, res) => {
             return res.status(400).json({message:"All field required!"})
         }
 
+
+        const subject = await Subject.findByPk(subject_id);
+
+if (!subject) {
+    return res.status(404).json({ message: "Invalid Subject" });
+}
+
         const existing = await Chapter.findOne({
             where: {title, subject_id}
         })
@@ -22,11 +29,7 @@ const createChapter = async (req, res) => {
         }
 
  
-const subject = await Subject.findByPk(subject_id);
 
-if (!subject) {
-    return res.status(404).json({ message: "Invalid Subject" });
-}
 
         const chapter = await Chapter.create({
             subject_id, title, order_index,
@@ -173,6 +176,6 @@ await chapter.update({ is_active: true });
 
 }
 
-module.exports = {
+module.exports.chapterController = {
     createChapter, getAllChapters, getChapterById, updateChapter, deleteChapter, setActiveChapter
 }
