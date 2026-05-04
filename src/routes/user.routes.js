@@ -2,15 +2,23 @@ const express = require('express');
 const router = express.Router();
 const {userController} = require('../controllers/user.controller');
 
+
+const {authenticate} = require("../middleware/authMiddleware");
+const {roleAuth} = require("../middleware/roleMiddleware");
+
+
+router.use(authenticate)  
 // Get all users
-router.get('/', userController.getAllUsers);
+router.get('/users', roleAuth("User","read"), userController.getAllUsers);
+
 
 // Get user by ID
-router.get('/:id', userController.getUserById);
+router.get('/users/:id', roleAuth("User","read"),userController.getUserById);
 
 // Update user
-router.put('/:id', userController.updateUser);
+router.put('/users/:id',roleAuth("User","update"), userController.updateUser);
 
-// (Add more user routes as needed)
+router.delete('/users/:id', roleAuth("User","delete"), userController.deleteUser);
+
 
 module.exports = router;

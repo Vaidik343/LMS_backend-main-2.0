@@ -16,7 +16,7 @@ router.get('/syllabus_entries/:id', roleAuth('SyllabusEntry', 'read'), syllabusE
 
 router.put('/syllabus_entries/:id', roleAuth('SyllabusEntry', 'update'), syllabusEntryController.updateSyllabusEntry);
 
-router.delete('syllabus_entries/:id', roleAuth('syllabusEntry', 'delete'), syllabusEntryController.deleteSyllabusEntry);
+router.delete('/syllabus_entries/:id', roleAuth('SyllabusEntry', 'delete'), syllabusEntryController.deleteSyllabusEntry);
 
 module.exports = router;
 

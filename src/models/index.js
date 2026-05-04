@@ -15,15 +15,15 @@ const StudentProgress     = require("./studentProgress.model")(sequelize, DataTy
 
 // ── Layer 5: Activity ──────────────────────────────────
 
-const Session        = require("./session.model")(sequelize, DataTypes);
-const SessionChapter = require("./sessionChapter.model")(sequelize, DataTypes);
-const ClinicalDetail = require("./clinicalDetail.model")(sequelize, DataTypes);
+const Session        = require("./sessions.model")(sequelize, DataTypes);
+const SessionChapter = require("./sessionChapters.model")(sequelize, DataTypes);
+const ClinicalDetail = require("./clinicalDetails.model")(sequelize, DataTypes);
 const Attendance     = require("./attendance.model")(sequelize, DataTypes);
 
 
 // ── Initialize models ────────────────────────────────────────
 const User          = require("./user.model")(sequelize, DataTypes);
-const AcademicYear  = require("./academic_years.model")(sequelize, DataTypes);
+const AcademicYear  = require("./academicYears.model")(sequelize, DataTypes);
 const Department    = require("./department.model")(sequelize, DataTypes);
 const Class         = require("./class.model")(sequelize, DataTypes);
 const Course        = require("./courses.model")(sequelize, DataTypes);
@@ -37,7 +37,7 @@ const SyllabusEntry = require("./syllabusEntry.model")(sequelize, DataTypes);
 
 const Assessment       = require("./assessments.model")(sequelize, DataTypes);
 const AssessmentResult = require("./assessmentResults.model")(sequelize, DataTypes);
-const StudentTransfer  = require("./studentTransfer.model")(sequelize, DataTypes);
+const StudentTransfer  = require("./studentTransfers.model")(sequelize, DataTypes);
 
 // ── Layer 1 Associations ───────────────────────────────────── 
 

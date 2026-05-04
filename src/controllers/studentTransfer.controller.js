@@ -1,5 +1,5 @@
 const {
- Student, StudentProgress, StudentTransfer, Batch, Division,
+ Student, StudentProgress, StudentTransfer, Batch, Division,Semester, AcademicYear, 
  sequelize
 } = require("../models");
 
@@ -10,9 +10,9 @@ const transferStudent = async (req, res) => {
 
   try {
     // 🔒 only admin
-    if (req.user.role !== "admin") {
-      return res.status(403).json({ message: "Forbidden" });
-    }
+    // if (req.user.role !== "admin") {
+    //   return res.status(403).json({ message: "Forbidden" });
+    // }
 
     const {
       student_id,
@@ -71,7 +71,7 @@ const transferStudent = async (req, res) => {
     );
 
     // ================= TRANSFER LOG =================
-    const transfer = await StudentTransfers.create(
+    const transfer = await StudentTransfer.create(
       {
         student_id,
         from_batch_id: current.batch_id,
@@ -117,16 +117,16 @@ const getTransferHistory = async (req, res) => {
     }
 
     // ✅ role check
-    if (
-      req.user.role === "student" &&
-      req.user.id !== student_id
-    ) {
-      return res.status(403).json({ message: "Forbidden" });
-    }
+    // if (
+    //   req.user.role === "student" &&
+    //   req.user.id !== student_id
+    // ) {
+    //   return res.status(403).json({ message: "Forbidden" });
+    // }
 
-    if (!["admin", "teacher", "student"].includes(req.user.role)) {
-      return res.status(403).json({ message: "Forbidden" });
-    }
+    // if (!["admin", "teacher", "student"].includes(req.user.role)) {
+    //   return res.status(403).json({ message: "Forbidden" });
+    // }
 
     const transfers = await StudentTransfers.findAll({
       where: {
@@ -169,16 +169,16 @@ const getStudentFullHistory = async (req, res) => {
     }
 
     // ✅ role protection
-    if (
-      req.user.role === "student" &&
-      req.user.id !== student_id
-    ) {
-      return res.status(403).json({ message: "Forbidden" });
-    }
+    // if (
+    //   req.user.role === "student" &&
+    //   req.user.id !== student_id
+    // ) {
+    //   return res.status(403).json({ message: "Forbidden" });
+    // }
 
-    if (!["admin", "teacher", "student"].includes(req.user.role)) {
-      return res.status(403).json({ message: "Forbidden" });
-    }
+    // if (!["admin", "teacher", "student"].includes(req.user.role)) {
+    //   return res.status(403).json({ message: "Forbidden" });
+    // }
 
     // ================= CURRENT STATE =================
     const current = await StudentProgress.findOne({
@@ -227,7 +227,7 @@ const getStudentFullHistory = async (req, res) => {
   }
 };
 
-module.exports = {
+module.exports.studentTransferController = {
     getStudentFullHistory, getTransferHistory, transferStudent
 }
 

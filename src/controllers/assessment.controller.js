@@ -1,10 +1,10 @@
-const {Assessment} = require("../models");
+const {Assessment, Faculty, Subject, Batch, Division, Semester, AcademicYear} = require("../models");
 
 const createAssessment = async (req, res) => {
   try {
-    if (req.user.role !== "teacher") {
-      return res.status(403).json({ message: "Forbidden" });
-    }
+    // if (req.user.role !== "teacher") {
+    //   return res.status(403).json({ message: "Forbidden" });
+    // }
 
     const {
       subject_id,
@@ -157,6 +157,7 @@ const getAssessmentById = async (req, res) => {
 const updateAssessment = async (req, res) => {
   try {
     const id = req.params.id;
+    const { title, assessment_type, total_marks, assessment_date } = req.body
 
     const assessment = await Assessment.findByPk(id);
 
@@ -172,7 +173,8 @@ const updateAssessment = async (req, res) => {
       return res.status(403).json({ message: "Forbidden" });
     }
 
-    await assessment.update(req.body);
+    await assessment.update({ title, assessment_type, total_marks, assessment_date })  // ✅
+
 
     res.status(200).json({ message: "Updated successfully" });
 
@@ -180,7 +182,6 @@ const updateAssessment = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
-
 
 
 const deleteAssessment = async (req, res) => {
@@ -209,6 +210,6 @@ const deleteAssessment = async (req, res) => {
   }
 };
 
-module.exports = {
-    createAssessment, getAllAssessment, getAssessmentById, deleteAssessment
+module.exports.assessmentController = {
+    createAssessment, getAllAssessment, getAssessmentById,updateAssessment, deleteAssessment
 }

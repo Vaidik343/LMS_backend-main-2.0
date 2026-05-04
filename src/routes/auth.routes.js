@@ -1,15 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const {authController} = require('../controllers/auth.Controller');
-const {authenticate} = require("../middleware/authMiddleware")
+const {authController} = require('../controllers/auth.controller');
+
+const {authenticate} = require("../middleware/authMiddleware");
+const {roleAuth} = require("../middleware/roleMiddleware");
 
 //public
-router.post("/google-login", authController.loginWithGoogle);
-router.post("/refresh-token", authController.refreshToken);
+// router.use(authenticate)  
+router.post("/auth/google-login", authController.loginWithGoogle);
+router.post("/auth/refresh-token", authController.refreshToken);
 
 //protected
-router.post("/logout", authenticate, authController.logout);
-router.get("/me", authenticate, authController.getMe);
+router.post("/auth/logout",authenticate,authController.logout);
+router.get("/auth/me", authenticate, authController.getMe);
 
 
 module.exports = router;

@@ -7,10 +7,10 @@ const createBulkResults = async (req, res) => {
     try {
         // teacher/admin
 
-        if(!["teacher", "admin"]. includes(req.user.role))
-        {
-            return res.status(403).json({message: "Forbidden"});
-        }
+        // if(!["teacher", "admin"]. includes(req.user.role))
+        // {
+        //     return res.status(403).json({message: "Forbidden"});
+        // }
 
         const {assessment_id, results} = req.body;
 
@@ -166,6 +166,7 @@ const getResultById = async (req, res) => {
 
         res.status(200).json(result);
     } catch (error) {
+           await t.rollback()
         res.status(500).json({ message: "Server Error" });
     }
 
@@ -197,6 +198,7 @@ const updateResult = async (req, res) => {
 
         res.status(200).json({message: "Update successfully"});
     } catch (error) {
+           await t.rollback()
         res.status(500).json({ message: "Server Error" });
     }
 
@@ -214,22 +216,23 @@ const deleteResult = async (req, res) => {
         }
           
 
-        if(!["admin", "teacher"].includes(req.user.role))
-        {
-            return res.status(403).json({message:"Forbidden"});
-        }
+        // if(!["admin", "teacher"].includes(req.user.role))
+        // {
+        //     return res.status(403).json({message:"Forbidden"});
+        // }
 
         await result.update({is_active: false});
 
         res.status(200).json({message: "Delete successfully"});
     } catch (error) {
+           await t.rollback()
         res.status(500).json({ message: "Server Error" });
     }
 
 }
 
 
-module.exports.AssessmentResultController = {
+module.exports.assessmentResultController = {
     createBulkResults, getAllResults, getResultById, updateResult, deleteResult
 }
 

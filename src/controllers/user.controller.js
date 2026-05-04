@@ -129,7 +129,7 @@ module.exports.userController = {
   getUserById,
   updateUser,
   deleteUser,
-  getMyProfile
+  // getMyProfile
 };
 
 

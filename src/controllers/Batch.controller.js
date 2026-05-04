@@ -15,7 +15,7 @@ const createBatchYear = async (req,res) => {
             name ,  course_id, academic_year_id , is_active:true
         })
 
-        res.status(200).json(batch);
+        res.status(201).json(batch);
     } catch (error) {
         console.log("🚀 ~ createBatchYear ~ error:", error)
         res.status(500).json({message:'Server Error'})

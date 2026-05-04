@@ -25,8 +25,11 @@ const generateRefreshToken = () => {
 const loginWithGoogle = async (req, res) => {
   try {
     const { token } = req.body;
+    console.log("🚀 ~ loginWithGoogle ~ token length:", token ? token.length : 0);
+    console.log("🚀 ~ loginWithGoogle ~ GOOGLE_CLIENT_ID:", process.env.GOOGLE_CLIENT_ID);
 
     if (!token) {
+      console.log("🚀 ~ loginWithGoogle ~ missing token");
       return res.status(400).json({ message: "Google token required" });
     }
 
@@ -36,6 +39,12 @@ const loginWithGoogle = async (req, res) => {
     });
 
     const payload = ticket.getPayload();
+    console.log("🚀 ~ loginWithGoogle ~ payload:", {
+      sub: payload.sub,
+      email: payload.email,
+      aud: payload.aud,
+      iss: payload.iss,
+    });
 
     const {
       sub: google_id,
@@ -45,14 +54,25 @@ const loginWithGoogle = async (req, res) => {
     } = payload;
 
     let user = await User.findOne({ where: { google_id } });
+    console.log("🚀 ~ loginWithGoogle ~ user by google_id:", user ? user.id : null);
 
-if (!user) {
-  return res.status(401).json({ message: "You are not registered in the system" })
-} 
+    if (!user) {
+      user = await User.findOne({ where: { email } });
+      console.log("🚀 ~ loginWithGoogle ~ user by email:", user ? user.id : null);
+      if (user) {
+        user.google_id = google_id;
+        await user.save();
+      }
+    }
 
-if (!user.is_active) {
-  return res.status(403).json({ message: "Your account is disabled" })
-}
+    if (!user) {
+      console.log("🚀 ~ loginWithGoogle ~ no user found for google_id/email", { google_id, email });
+      return res.status(401).json({ message: "You are not registered in the system" });
+    }
+
+    if (!user.is_active) {
+      return res.status(403).json({ message: "Your account is disabled" });
+    }
     // 🔥 NEW: generate tokens
     const accessToken = generateAccessToken(user);
     const refreshTokenValue = generateRefreshToken();
@@ -73,8 +93,10 @@ if (!user.is_active) {
     });
 
   } catch (error) {
-    console.log("🚀 login error:", error);
-    res.status(500).json({ message: "Invalid Google token" });
+    console.log("🚀 login error name:", error.name);
+    console.log("🚀 login error message:", error.message);
+    console.log("🚀 login error stack:", error.stack);
+    res.status(500).json({ message: "Invalid Google token", error: error.message });
   }
 };
 

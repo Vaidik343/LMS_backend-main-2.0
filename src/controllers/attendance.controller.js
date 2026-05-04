@@ -98,10 +98,15 @@ const getAllAttendance = async (req, res) => {
       offset,
       order: [["student_id", "ASC"]],
       include: [
-        {
-          model: Student,
-          attributes: ["id", "name", "enrollment_no"],
-        },
+         {
+    model: Student,
+    include: [
+      {
+        model: User,
+        attributes: ["name"]
+      }
+    ]
+  },
         {
           model: Session,
           attributes: ["id", "session_date", "start_time", "end_time"],
@@ -171,24 +176,26 @@ const updateAttendance = async (req, res) => {
   }
 };
 
+
+// maybe attendance cant be deleted
 // SOFT DELETE
-const deleteAttendance = async (req, res) => {
-  try {
-    const attendanceId = req.params.id;
+// const deleteAttendance = async (req, res) => {
+//   try {
+//     const attendanceId = req.params.id;
 
-    const attendance = await Attendance.findByPk(attendanceId);
+//     const attendance = await Attendance.findByPk(attendanceId);
 
-    if (!attendance) {
-      return res.status(404).json({ message: "Not Found!" });
-    }
+//     if (!attendance) {
+//       return res.status(404).json({ message: "Not Found!" });
+//     }
 
-    await attendance.update({ is_active: false });
+//     await attendance.update({ is_active: false });
 
-    res.status(200).json({ message: "Attendance deleted" });
-  } catch (error) {
-    res.status(500).json({ message: "Server Error" });
-  }
-};
+//     res.status(200).json({ message: "Attendance deleted" });
+//   } catch (error) {
+//     res.status(500).json({ message: "Server Error" });
+//   }
+// };
 
 // STUDENT SELF
 const getMyAttendance = async (req, res) => {
@@ -221,6 +228,6 @@ module.exports.attendanceController = {
   getAllAttendance,
   getAttendanceById,
   updateAttendance,
-  deleteAttendance,
+  // deleteAttendance,
   getMyAttendance,
 };

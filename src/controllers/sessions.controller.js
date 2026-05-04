@@ -394,7 +394,7 @@ const deleteSession = async (req, res) => {
   }
 };
 
-module.exports = {
+module.exports.sessionController = {
   createSession,
   getAllSessions,
   getSessionById,

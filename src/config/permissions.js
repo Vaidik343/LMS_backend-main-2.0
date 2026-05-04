@@ -131,6 +131,11 @@ const PERMISSIONS = {
     update: ["admin"],
     delete: ["admin"],
   },
+
+Dashboard: {
+  student: ["student", "admin"],
+  teacher: ["teacher", "hod", "admin", "principal"],
+}
 };
 
 module.exports = PERMISSIONS;

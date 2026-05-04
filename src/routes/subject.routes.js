@@ -10,10 +10,10 @@ router.post("/subjects", roleAuth("Subject", "create"), subjectController.create
 
 router.get("/subjects", roleAuth("Subject", "read"), subjectController.getAllSubject);
 
-router.get("/subject", roleAuth("Subject", "read"), subjectController.getSubjectById);
+router.get("/subjects/:id", roleAuth("Subject", "read"), subjectController.getSubjectById);
 
-router.put("/subjects", roleAuth("Subject", "update"), subjectController.updateSubject);
+router.put("/subjects/:id", roleAuth("Subject", "update"), subjectController.updateSubject);
 
-router.delete("/subjects", roleAuth("Subject", "delete"), subjectController.deleteSubject);
+router.delete("/subjects/:id", roleAuth("Subject", "delete"), subjectController.deleteSubject);
 
 module.exports = router;

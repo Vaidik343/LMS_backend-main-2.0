@@ -228,7 +228,7 @@ const deleteFacultyAssignMaster = async (req,res) => {
         {
             return res.status(404).json({message: "Not Found!"})
         }
-        if(facultyAssign.is_active)
+        if(!facultyAssign.is_active)
         {
              return res.status(400).json({message:"Cannot delete an active master"});
         }

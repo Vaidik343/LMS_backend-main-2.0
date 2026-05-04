@@ -1,9 +1,12 @@
 const express = require('express');
-const router = express.Router('express');
+const router = express.Router();
 const {divisionController} = require('../controllers/division.controller');
 
 const { authenticate } = require('../middleware/authMiddleware');
 const { roleAuth } = require('../middleware/roleMiddleware');
+
+
+router.use(authenticate) 
 
 router.post("/divisions", roleAuth("Division", "create"), divisionController.createDivision);
 

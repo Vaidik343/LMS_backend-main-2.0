@@ -73,9 +73,9 @@ const getChapterById = async (req, res) => {
     
     try {
         const chapterId = req.params.id
-        const chapter = await Chapter.findByPk(
-            chapterId
-        )
+        const chapter = await Chapter.findOne({
+  where: { id: chapterId, is_active: true }
+});
         
         if(!chapter)
             {
@@ -99,9 +99,9 @@ const updateChapter = async (req, res) => {
         const chapterId = req.params.id
         const { title, order_index} = req.body;
 
-        const chapter = await Chapter.findByPk(
-            chapterId
-        )
+        const chapter = await Chapter.findOne({
+  where: { id: chapterId, is_active: true }
+});
         
         if(!chapter)
             {
@@ -130,9 +130,9 @@ const deleteChapter = async (req, res) => {
         const chapterId = req.params.id
 
         
-        const chapter = await Chapter.findByPk(
-            chapterId
-        )
+        const chapter = await Chapter.findOne({
+  where: { id: chapterId, is_active: true }
+});
         
         if(!chapter)
             {

@@ -11,13 +11,13 @@ router.post("/semesters", roleAuth("Semester", "create"), semesterController.cre
 
 router.get("/semesters", roleAuth("Semester", "read"), semesterController.getAllSemester);
 
-router.get("/semesters", roleAuth("Semester", "read"), semesterController.getSemesterById);
+router.get("/semesters/:id", roleAuth("Semester", "read"), semesterController.getSemesterById);
 
-router.put("/semesters", roleAuth("Semester", "update"), semesterController.updateSemester);
+router.put("/semesters/:id", roleAuth("Semester", "update"), semesterController.updateSemester);
 
-router.delete("/Semester", roleAuth("Semester", "delete"), semesterController.deleteSemester);
+router.delete("/semester/:id", roleAuth("Semester", "delete"), semesterController.deleteSemester);
 
-router.patch("/semesters", roleAuth("Semester", "setActive"), semesterController.setActiveSemester);
+router.patch("/semesters/:id/set-active", roleAuth("Semester", "setActive"), semesterController.setActiveSemester);
 
 
 module.exports = router;

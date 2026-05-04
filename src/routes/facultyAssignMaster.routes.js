@@ -12,7 +12,12 @@ router.post("/faculty_assign_master", roleAuth("FacultyAssignMaster", "create"),
 router.get("/faculty_assign_master", roleAuth("FacultyAssignMaster", "read"), facultyAssignMasterController.getAllFacultyAssignMaster);
 
 router.get("/faculty_assign_master/:id", roleAuth("FacultyAssignMaster", "read"), facultyAssignMasterController.getFacultyAssignById);
-router.put("/faculty_assign_master/:id", roleAuth("FacultyAssignMaster", "read"), facultyAssignMasterController.getFacultyAssignById);
-router.delete("/faculty_assign_master/:id", roleAuth("FacultyAssignMaster", "read"), facultyAssignMasterController.getFacultyAssignById);
 
 
+router.put("/faculty_assign_master/:id", roleAuth("FacultyAssignMaster", "update"), facultyAssignMasterController.updateFacultyAssign);
+
+
+router.delete("/faculty_assign_master/:id", roleAuth("FacultyAssignMaster", "delete"), facultyAssignMasterController.deleteFacultyAssignMaster);
+
+
+module.exports = router
