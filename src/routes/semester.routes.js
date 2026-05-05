@@ -15,7 +15,7 @@ router.get("/semesters/:id", roleAuth("Semester", "read"), semesterController.ge
 
 router.put("/semesters/:id", roleAuth("Semester", "update"), semesterController.updateSemester);
 
-router.delete("/semester/:id", roleAuth("Semester", "delete"), semesterController.deleteSemester);
+router.delete("/semesters/:id", roleAuth("Semester", "delete"), semesterController.deleteSemester);
 
 router.patch("/semesters/:id/set-active", roleAuth("Semester", "setActive"), semesterController.setActiveSemester);
 

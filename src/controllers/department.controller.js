@@ -34,11 +34,13 @@ const getAllDepartment = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
     const offset = (page - 1) * limit;
+    const where = {is_active:true}
 
     const { count, rows } = await Department.findAndCountAll({
       order: [["name", "ASC"]],
       limit,
       offset,
+      where
     });
 
     res

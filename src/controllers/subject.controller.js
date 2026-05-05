@@ -1,20 +1,18 @@
-const {Subject, Semester, Chapter } = require("../models");
+const { Subject, Semester, Chapter, Course } = require("../models");
 
 const createSubject = async (req, res) => {
     try {
-        const {name, code , description,  semester_id} = req.body;
+        const { name, code, description, semester_id } = req.body;
 
-        if(!name || !code || !semester_id)
-        {
-            return res.status(400).json({message:"field required!"});
+        if (!name || !code || !semester_id) {
+            return res.status(400).json({ message: "field required!" });
         }
 
         //FK validation
         const semester = await Semester.findByPk(semester_id);
-        if(!semester)
-        {
+        if (!semester) {
             return res.status(404).json({
-                message:"Invalid Semester"
+                message: "Invalid Semester"
             })
         }
 
@@ -27,21 +25,20 @@ const createSubject = async (req, res) => {
             }
         });
 
-        if(existing)
-        {
+        if (existing) {
             return res.status(409).json({
-                message:"Subject already exists in this semester"
+                message: "Subject already exists in this semester"
             })
         }
 
-       const subject = await Subject.create({
-        name,code ,description, semester_id, is_active:true
-       })
+        const subject = await Subject.create({
+            name, code, description, semester_id, is_active: true
+        })
 
-       res.status(201).json(subject);
+        res.status(201).json(subject);
     } catch (error) {
-        res.status(500).json({message:'Server Error'})
-        
+        res.status(500).json({ message: 'Server Error' })
+          console.log("subject error", error)
     }
 
 }
@@ -52,26 +49,29 @@ const getAllSubject = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 20
-        const offset = (page - 1) * limit 
+        const offset = (page - 1) * limit
+        
 
-        const {count, rows} = await Subject.findAndCountAll({
-            order:[["name", "ASC"]],
+        const { count, rows } = await Subject.findAndCountAll({
+            order: [["name", "ASC"]],
             limit,
             offset,
-              include: [
+            
+            include: [
                 {
                     model: Semester,
-                    attributes: ["id", "number", "label"]
-                }
+                    attributes: ["id", "label"]
+                },
+                
             ]
         })
 
         res.status(200).json({
-            data:rows, total: count, page, limit
+            data: rows, total: count, page, limit
         })
     } catch (error) {
-        res.status(500).json({message:'Server Error'})
-        
+        res.status(500).json({ message: 'Server Error' })
+        console.log("get all subject", error)
     }
 
 }
@@ -81,46 +81,46 @@ const getAllSubject = async (req, res) => {
 
 const getSubjectById = async (req, res) => {
     try {
-            const subjectId = req.params.id;
-            const subject = await Subject.findByPk(subjectId,{
-                include: [
-                    {
-                        model: Semester,
-                        attributes: ["id", "number", "label"]
-                    },
-                    {
-                        model: Chapter,
-                        attributes: ["id", "title", "order_index"]
-                    },
-                ]
-            });
+        const subjectId = req.params.id;
+        const subject = await Subject.findByPk(subjectId, {
+            include: [
+                {
+                    model: Semester,
+                    attributes: ["id", "number", "label"]
+                },
+                // {
+                //     model: Chapter,
+                //     attributes: ["id", "title", "order_index"]
+                // }, no need for this
+            ]
+        });
 
-               if(!subject) {
-            return res.status(404).json({message:"Not Found!"});
+        if (!subject) {
+            return res.status(404).json({ message: "Not Found!" });
         }
         res.status(200).json(subject);
     } catch (error) {
-        res.status(500).json({message:'Server Error'})
+        res.status(500).json({ message: 'Server Error' })
     }
 
 }
 
 
 // update subject
-const updateSubject = async (req,res) => {
+const updateSubject = async (req, res) => {
     const subjectId = req.params.id;
     try {
-        const {name, code , description} = req.body || {};
+        const { name, code, description } = req.body || {};
         const subject = await Subject.findByPk(subjectId);
 
-        if(!subject) {
-            return res.status(404).json({message:"Not Found!"});
+        if (!subject) {
+            return res.status(404).json({ message: "Not Found!" });
         }
 
-        const updateSubject = await subject.update({name , code , description})
+        const updateSubject = await subject.update({ name, code, description })
         res.status(200).json(updateSubject)
     } catch (error) {
-        res.status(500).json({message:'Server Error'})
+        res.status(500).json({ message: 'Server Error' })
     }
 
 }
@@ -130,20 +130,20 @@ const deleteSubject = async (req, res) => {
     try {
         const subject = await Subject.findByPk(subjectId);
 
-        if(!subject) {
-            return res.status(404).json({message:"Not Found!"});
+        if (!subject) {
+            return res.status(404).json({ message: "Not Found!" });
         }
         //    if (!subject.is_active) {
         //     return res.status(400).json({
         //         message: "Subject already inactive"
         //     });
         // }
-        await subject.update({is_active: false});
+        await subject.update({ is_active: false });
 
         // message 'deactive' in all controller
-        res.status(200).json({message:"Subject deleted!"})
+        res.status(200).json({ message: "Subject deleted!" })
     } catch (error) {
-        res.status(500).json({message:'Server Error'})
+        res.status(500).json({ message: 'Server Error' })
 
     }
 

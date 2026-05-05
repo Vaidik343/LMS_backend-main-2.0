@@ -71,10 +71,6 @@ Semester.belongsTo(Batch, { foreignKey: "batch_id" });
 Course.hasMany(Semester, { foreignKey: "course_id", onDelete: "RESTRICT" });
 Semester.belongsTo(Course, { foreignKey: "course_id" });
 
-// Course → Subject
-Course.hasMany(Subject, { foreignKey: "course_id", onDelete: "RESTRICT" });
-Subject.belongsTo(Course, { foreignKey: "course_id" });
-
 // Semester → Subject
 Semester.hasMany(Subject, { foreignKey: "semester_id", onDelete: "RESTRICT" });
 Subject.belongsTo(Semester, { foreignKey: "semester_id" });

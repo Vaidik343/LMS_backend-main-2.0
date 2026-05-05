@@ -126,11 +126,11 @@ const deleteSemester = async (req, res) => {
     if (!semester) {
       return res.status(404).json({ message: "Not Found!" });
     }
-    if (semester.is_active) {
-      return res
-        .status(400)
-        .json({ message: "Cannot delete an active semester" });
-    }
+    // if (semester.is_active) {
+    //   return res
+    //     .status(400)
+    //     .json({ message: "Cannot delete an active semester" });
+    // }
 
     await semester.update({ is_active: false });
     res.status(200).json({ message: "Semester deleted!" });

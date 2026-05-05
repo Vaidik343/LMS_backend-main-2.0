@@ -40,7 +40,7 @@ if (!subject) {
     } catch (error) {
         
         res.status(500).json({message:'Server Error'})
-        
+        console.log("chapter error", error)
     }
 
 }
@@ -52,11 +52,13 @@ const getAllChapters = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 20
         const offset = (page - 1) * limit
+        const where = {is_active: true}
 
         const {count , rows} = await Chapter.findAndCountAll({
             order:[["order_index", "ASC"]],
             limit,
-            offset
+            offset,
+            where 
         });
         
          res.status(200).json({ data: rows, total: count, page, limit})
@@ -180,8 +182,17 @@ module.exports.chapterController = {
     createChapter, getAllChapters, getChapterById, updateChapter, deleteChapter, setActiveChapter
 }
 
-//
+// they want to speak eng
 
-// they wanted to drink water
+//we did write
 
-//we drank tea
+// amare gavu nathi
+
+// teo ne mobile kharidvu n hatu
+
+// ritu wanted money
+
+
+//we dont want to sing
+
+// they wants to buy mobile

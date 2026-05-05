@@ -199,11 +199,13 @@ const getAllSessions = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = Math.min(parseInt(req.query.limit) || 20, 50);
     const offset = (page - 1) * limit;
+    const where = {is_active: true}
 
     const { count, rows } = await Session.findAndCountAll({
       limit,
       offset,
       order: [["id", "DESC"]],
+      where,
       include: [
         {
           model: SessionChapter,

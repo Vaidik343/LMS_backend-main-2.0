@@ -11,8 +11,18 @@ const createBatchYear = async (req,res) => {
             return res.status(400).json({message:"field required!"});
         }
 
+        const course = await Course.findByPk(course_id);
+        if (!course) {
+            return res.status(404).json({ message: "Invalid Course ID" });
+        }
+
+        const academicYear = await AcademicYear.findByPk(academic_year_id);
+        if (!academicYear) {
+            return res.status(404).json({ message: "Invalid Academic Year ID" });
+        }
+
         const batch = await Batch.create({
-            name ,  course_id, academic_year_id , is_active:true
+            name, course_id, academic_year_id, is_active: true
         })
 
         res.status(201).json(batch);
@@ -28,11 +38,13 @@ const getAllBatches = async (req,res) => {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 20
         const offset = (page -1) * limit 
+        const where = {is_active: true}
 
         const {count, rows} = await Batch.findAndCountAll({
             order:[["name", "ASC"]],
             limit,
             offset,
+            where,
             include: [
                 {
                     model: Course,
