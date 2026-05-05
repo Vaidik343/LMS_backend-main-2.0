@@ -5,18 +5,18 @@ const jwt = require("jsonwebtoken");
 const authenticate = (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
-    console.log("🔑 authenticate ~ authHeader:", authHeader);
+    // console.log("🔑 authenticate ~ authHeader:", authHeader);
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      console.log("🔑 authenticate ~ missing or invalid Authorization header");
+      // console.log("🔑 authenticate ~ missing or invalid Authorization header");
       return res.status(401).json({ message: "Unauthorized" });
     }
 
     const token = authHeader.split(" ")[1];
-    console.log("🔑 authenticate ~ bearer token length:", token ? token.length : 0);
+    // console.log("🔑 authenticate ~ bearer token length:", token ? token.length : 0);
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("🔑 authenticate ~ decoded token:", decoded);
+    // console.log("🔑 authenticate ~ decoded token:", decoded);
 
     req.user = decoded; // { id, role }
 

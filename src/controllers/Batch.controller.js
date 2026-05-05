@@ -1,4 +1,4 @@
-const {Batch} = require('../models')
+const {Batch, Course, AcademicYear} = require('../models')
 
 //create
     
@@ -32,7 +32,17 @@ const getAllBatches = async (req,res) => {
         const {count, rows} = await Batch.findAndCountAll({
             order:[["name", "ASC"]],
             limit,
-            offset
+            offset,
+            include: [
+                {
+                    model: Course,
+                    attributes: ["name"]
+                },
+                {
+                    model: AcademicYear,
+                    attributes: ["label"]
+                }
+            ]
         })
 
         res.status(200).json({message:"List of All Batches", data: rows, total: count, page, limit})
@@ -91,10 +101,10 @@ const deleteBatch = async (req, res) => {
         {
             return res.status(404).json({message: "Not Found!"})
         }
-        if(batch.is_active)
-        {
-             return res.status(400).json({message:"Cannot delete an active batch"});
-        }
+        // if(batch.is_active)
+        // {
+        //      return res.status(400).json({message:"Cannot delete an active batch"});
+        // }
         await batch.update({is_active: false});
         res.status(200).json({message:"Batch Deactivated!"})
 

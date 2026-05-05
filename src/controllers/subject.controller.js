@@ -133,11 +133,11 @@ const deleteSubject = async (req, res) => {
         if(!subject) {
             return res.status(404).json({message:"Not Found!"});
         }
-           if (!subject.is_active) {
-            return res.status(400).json({
-                message: "Subject already inactive"
-            });
-        }
+        //    if (!subject.is_active) {
+        //     return res.status(400).json({
+        //         message: "Subject already inactive"
+        //     });
+        // }
         await subject.update({is_active: false});
 
         // message 'deactive' in all controller

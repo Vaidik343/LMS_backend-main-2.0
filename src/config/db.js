@@ -12,6 +12,9 @@ const sequelize = new Sequelize(process.env.DATABASE_URL , {
      
   // } ,
   logging: false, // optional, turn off SQL logging
+  define: {
+    underscored: true,
+  },
 });
 // console.log("🚀 ~ sequelize:", sequelize)
 

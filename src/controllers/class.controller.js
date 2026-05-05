@@ -1,5 +1,5 @@
 
-const {Class } = require('../models');
+const {Class, Course } = require('../models');
 
 // create
    
@@ -55,7 +55,8 @@ const getAllClass = async (req,res) => {
         const {count, rows} = await Class.findAndCountAll({
             order:[["name", "ASC"]],
             limit,
-            offset
+            offset,
+            
         });
 
         res.status(200).json({message:"List of All Class", data: rows, total: count, page, limit})
@@ -118,10 +119,10 @@ const deleteClass = async (req,res) => {
         {
              return res.status(404).json({message:"Not Found"})
         }
-         if(classDelete.is_active)
-        {
-            return res.status(400).json({message:"Cannot delete an active class"});
-        }
+        //  if(classDelete.is_active)
+        // {
+        //     return res.status(400).json({message:"Cannot delete an active class"});
+        // }
 
           await classDelete.update({is_active: false})
           res.status(200).json(classDelete)

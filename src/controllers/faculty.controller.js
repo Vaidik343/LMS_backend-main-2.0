@@ -172,9 +172,9 @@ const deleteFaculty = async (req, res) => {
         }
 
         // deleteFaculty — missing is_active check before deleting
-if (faculty.is_active) {
-  return res.status(400).json({ message: "Cannot delete an active faculty" })
-} 
+// if (faculty.is_active) {
+//   return res.status(400).json({ message: "Cannot delete an active faculty" })
+// } 
     
 await faculty.update({ is_active: false });
 

@@ -25,8 +25,8 @@ const generateRefreshToken = () => {
 const loginWithGoogle = async (req, res) => {
   try {
     const { token } = req.body;
-    console.log("🚀 ~ loginWithGoogle ~ token length:", token ? token.length : 0);
-    console.log("🚀 ~ loginWithGoogle ~ GOOGLE_CLIENT_ID:", process.env.GOOGLE_CLIENT_ID);
+    // console.log("🚀 ~ loginWithGoogle ~ token length:", token ? token.length : 0);
+    // console.log("🚀 ~ loginWithGoogle ~ GOOGLE_CLIENT_ID:", process.env.GOOGLE_CLIENT_ID);
 
     if (!token) {
       console.log("🚀 ~ loginWithGoogle ~ missing token");

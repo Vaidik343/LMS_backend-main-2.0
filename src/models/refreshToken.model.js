@@ -18,9 +18,8 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false
             },
 
-            expirers_at : {
-                type: DataTypes.UUID,
-                
+            expires_at : {
+                type: DataTypes.DATE,
             }, 
             is_active: {
         type: DataTypes.BOOLEAN,

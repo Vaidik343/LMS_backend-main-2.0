@@ -90,6 +90,8 @@
  *   post:
  *     summary: Logout user
  *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -116,6 +118,8 @@
  *   get:
  *     summary: Get current logged in user
  *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Current user data

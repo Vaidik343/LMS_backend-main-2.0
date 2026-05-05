@@ -50,17 +50,17 @@ app.use('/api', authRoute);
 console.log(`Loaded route: auth.routes.js`);
 
 fs.readdirSync(routesPath).forEach((file) => {
-    if(file.endsWith('.routes.js') && file !== 'auth.routes.js') {
-        const route = require(path.join(routesPath, file));
+  if (file.endsWith('.routes.js') && file !== 'auth.routes.js') {
+    const route = require(path.join(routesPath, file));
 
-        //Validate that the file exports a router
-        if(route && typeof route === 'function') {
-            app.use('/api', route);
-            console.log(`Loaded route: ${file}`);
-        } else {
-            console.warn(`skipped ${file}: not a valid router export`);
-        }
+    //Validate that the file exports a router
+    if (route && typeof route === 'function') {
+      app.use('/api', route);
+      // console.log(`Loaded route: ${file}`);
+    } else {
+      console.warn(`skipped ${file}: not a valid router export`);
     }
+  }
 });
 
 // app.use(require("./middleware/errorHandler"));
@@ -99,6 +99,11 @@ const options = {
         },
       },
     },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
   },
   apis: apiFiles,
 };

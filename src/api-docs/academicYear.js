@@ -7,7 +7,7 @@
 
 /**
  * @swagger
- * /api/academic-years:
+ * /api/academic_years:
  *   post:
  *     summary: Create a new academic year
  *     tags: [AcademicYear]
@@ -46,7 +46,7 @@
 
 /**
  * @swagger
- * /api/academic-years:
+ * /api/academic_years:
  *   get:
  *     summary: Get all academic years (paginated)
  *     tags: [AcademicYear]
@@ -70,7 +70,7 @@
 
 /**
  * @swagger
- * /api/academic-years/{id}:
+ * /api/academic_years/{id}:
  *   get:
  *     summary: Get academic year by ID
  *     tags: [AcademicYear]
@@ -91,7 +91,7 @@
 
 /**
  * @swagger
- * /api/academic-years/{id}:
+ * /api/academic_years/{id}:
  *   put:
  *     summary: Update academic year
  *     tags: [AcademicYear]
@@ -126,7 +126,7 @@
 
 /**
  * @swagger
- * /api/academic-years/{id}:
+ * /api/academic_years/{id}:
  *   delete:
  *     summary: Soft delete academic year
  *     tags: [AcademicYear]
@@ -149,7 +149,7 @@
 
 /**
  * @swagger
- * /api/academic-years/{id}/set-active:
+ * /api/academic_years/{id}/set-active:
  *   patch:
  *     summary: Set academic year as active
  *     tags: [AcademicYear]

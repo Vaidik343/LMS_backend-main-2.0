@@ -104,11 +104,11 @@ const deleteDepartment = async (req, res) => {
     if (!department) {
       return res.status(404).json({ message: "Not Found" });
     }
-    if (department.is_active) {
-      return res
-        .status(400)
-        .json({ message: "Cannot delete an active Department" });
-    }
+    // if (department.is_active) {
+    //   return res
+    //     .status(400)
+    //     .json({ message: "Cannot delete an active Department" });
+    // }
 
     await department.update({ is_active: false });
     res.status(200).json({ message: "Department deleted!" });

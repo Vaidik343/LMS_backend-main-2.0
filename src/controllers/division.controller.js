@@ -1,24 +1,23 @@
-const {Division, Batch } = require("../models");
+const { Division, Batch } = require("../models");
 
-    
+
 const createDivision = async (req, res) => {
 
     try {
-        const {name , batch_id} = req.body;
+        const { name, batch_id } = req.body;
 
-        
-        if(!name || !batch_id)
-        {
-            return res.status(400).json({message:"field required!"});
+
+        if (!name || !batch_id) {
+            return res.status(400).json({ message: "field required!" });
         }
 
-const batch = await Batch.findByPk(batch_id);
+        const batch = await Batch.findByPk(batch_id);
 
-if (!batch) {
-    return res.status(404).json({ message: "Invalid Batch" });
-}
+        if (!batch) {
+            return res.status(404).json({ message: "Invalid Batch" });
+        }
 
-// duplicate check
+        // duplicate check
         const existing = await Division.findOne({
             where: { name, batch_id }
         });
@@ -38,7 +37,7 @@ if (!batch) {
         res.status(201).json(division);
     } catch (error) {
         console.log("🚀 ~ createDivision ~ error:", error)
-        res.status(500).json({message:'Server Error'})
+        res.status(500).json({ message: 'Server Error' })
     }
 
 }
@@ -49,53 +48,51 @@ const getAllDivision = async (req, res) => {
         const limit = parseInt(req.query.limit) || 20
         const offset = (page - 1) * limit
 
-        const {count, rows} = await Division.findAndCountAll({
-            order:[["name", "DESC"]],
+        const { count, rows } = await Division.findAndCountAll({
+            order: [["name", "DESC"]],
             limit,
             offset,
-                include: [
-        {
-            model: Batch,
-            attributes: ["id", "name"]
-        }
-    ] 
+            include: [
+                {
+                    model: Batch,
+                    attributes: ["id", "name"]
+                }
+            ]
         });
 
-        res.status(200).json({message: "List of all divisions", data:rows, total:count, page, limit})
+        res.status(200).json({ message: "List of all divisions", data: rows, total: count, page, limit })
     } catch (error) {
-        res.status(500).json({message:'Server Error'})
+        res.status(500).json({ message: 'Server Error' })
     }
 
 }
 
-    
+
 const getDivisionById = async (req, res) => {
     const divisionId = req.params.id;
     try {
         const division = await Division.findByPk(divisionId)
 
-        if(!division)
-        {
-            return res.status(404).json({message:"Not Found!"});
+        if (!division) {
+            return res.status(404).json({ message: "Not Found!" });
         }
 
         res.status(200).json(division);
     } catch (error) {
         console.log("🚀 ~ getDivisionById ~ error:", error)
-        res.status(500).json({message:'Server Error'})
+        res.status(500).json({ message: 'Server Error' })
     }
 
 }
 
-    
+
 const updateDivision = async (req, res) => {
     const divisionId = req.params.id;
     try {
-        const {name} = req.body;
+        const { name } = req.body;
         const division = await Division.findByPk(divisionId)
-        if(!division)
-        {
-            return res.status(404).json({message:"Not Found!"});
+        if (!division) {
+            return res.status(404).json({ message: "Not Found!" });
         }
 
         const updateDivision = await division.update({
@@ -104,34 +101,33 @@ const updateDivision = async (req, res) => {
 
         res.status(200).json(updateDivision);
     } catch (error) {
-        res.status(500).json({message:'Server Error'})
+        res.status(500).json({ message: 'Server Error' })
         console.log("🚀 ~ updateDivision ~ error:", error)
     }
 
 }
 
-const deleteDivision = async (req,res) => {
+const deleteDivision = async (req, res) => {
     const divisionId = req.params.id;
     try {
-        
-        const division = await Division.findByPk(divisionId)
-        if(!division)
-        {
-            return res.status(404).json({message:"Not Found!"});
-        }
-         if(division.is_active)
-        {
-            return res.status(400).json({message:"Cannot delete an active division"});
-        }
 
-        await division.update({is_active: false})
-        res.status(200).json({message:"Division delete"})
+        const division = await Division.findByPk(divisionId)
+        if (!division) {
+            return res.status(404).json({ message: "Not Found!" });
+        }
+        //  if(division.is_active)
+        // {
+        //     return res.status(400).json({message:"Cannot delete an active division"});
+        // }
+
+        await division.update({ is_active: false })
+        res.status(200).json({ message: "Division delete" })
     } catch (error) {
-        res.status(500).json({message:'Server Error'})
+        res.status(500).json({ message: 'Server Error' })
     }
 
 }
 
 module.exports.divisionController = {
-    createDivision, getAllDivision, getDivisionById, updateDivision, deleteDivision 
+    createDivision, getAllDivision, getDivisionById, updateDivision, deleteDivision
 }
